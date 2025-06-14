@@ -6,11 +6,58 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { googleAI } from '@genkit-ai/googleai';
+import { genkit } from 'genkit';
+
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
+var Api2Pdf = require('api2pdf');
+var a2pClient = new Api2Pdf('e88c6fe1-d659-425e-8a0c-7fa4748aeedf');
+
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+const ai = genkit({
+  plugins: [
+    googleAI({
+      apiKey: 'AIzaSyCUBqDcHLbps9OK05_l3iFbEnKD0-WKAho',
+    }),
+  ],
+  model: googleAI.model('gemini-2.0-flash'), // set default model
+});
+app.use(express.json());
+
+async function testAPI() {
+  // make a generation request
+  const { text } = await ai.generate(
+    'create me a random resume html of a 3y experience software engineer having worked on 6 projects . headings will be of green color and content should adjust in one page and he has also recieved 2 award from previous company and just return html wrapped in single quote'
+  );
+  console.log(text);
+  api2pdf(text);
+  return text;
+}
+
+function api2pdf(text : string){
+  a2pClient.wkHtmlToPdf(text).then(function (result:any) {
+    console.log(result);
+  });
+}
+
+app.get('/api/testAPI', async (req, res) => {
+  try {
+    const response = await testAPI();
+    console.log(response, 'ti');
+    res.status(200).send({
+      result: response,
+      error: [],
+    });
+  } catch (error) {
+    res.status(400).send({
+      result: null,
+      error: [error],
+    });
+  }
+});
 
 /**
  * Example Express Rest API endpoints can be defined here.
