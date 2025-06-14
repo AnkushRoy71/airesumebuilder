@@ -13,14 +13,14 @@ import { genkit } from 'genkit';
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 var Api2Pdf = require('api2pdf');
-var a2pClient = new Api2Pdf('e88c6fe1-d659-425e-8a0c-7fa4748aeedf');
+var a2pClient = new Api2Pdf('');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 const ai = genkit({
   plugins: [
     googleAI({
-      apiKey: 'AIzaSyCUBqDcHLbps9OK05_l3iFbEnKD0-WKAho',
+      apiKey: '',
     }),
   ],
   model: googleAI.model('gemini-2.0-flash'), // set default model
