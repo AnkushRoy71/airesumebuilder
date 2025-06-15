@@ -8,19 +8,20 @@ import express from 'express';
 import { join } from 'node:path';
 import { googleAI } from '@genkit-ai/googleai';
 import { genkit } from 'genkit';
+require('dotenv').config();
 
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 var Api2Pdf = require('api2pdf');
-var a2pClient = new Api2Pdf('');
+var a2pClient = new Api2Pdf(process.env['APIPDF_KEY']);
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 const ai = genkit({
   plugins: [
     googleAI({
-      apiKey: '',
+      apiKey: process.env['GEMINI_API_KEY'],
     }),
   ],
   model: googleAI.model('gemini-2.0-flash'), // set default model
