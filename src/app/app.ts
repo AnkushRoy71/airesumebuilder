@@ -14,8 +14,8 @@ export class App implements OnInit {
   protected title = 'airesumebuilder';
   appService = inject(AppService);
   ngOnInit(): void {
-    this.appService.testAPICall().subscribe((response) => {
-      console.log(response);
-    });
+    // this.appService.testAPICall().subscribe((response) => {
+    //   console.log(response);
+    // });
   }
 }

@@ -8,6 +8,7 @@ import express from 'express';
 import { join } from 'node:path';
 import { googleAI } from '@genkit-ai/googleai';
 import { genkit } from 'genkit';
+import { pdfGenerationPrompt, UserData } from './prompt';
 require('dotenv').config();
 
 
@@ -28,11 +29,9 @@ const ai = genkit({
 });
 app.use(express.json());
 
-async function testAPI() {
+async function testAPI(UserData:UserData) {
   // make a generation request
-  const { text } = await ai.generate(
-    'create me a random resume html of a 3y experience software engineer having worked on 6 projects . headings will be of green color and content should adjust in one page and he has also recieved 2 award from previous company and just return html wrapped in single quote'
-  );
+  const { text } = await ai.generate(pdfGenerationPrompt(UserData));
   console.log(text);
   api2pdf(text);
   return text;
@@ -44,9 +43,10 @@ function api2pdf(text : string){
   });
 }
 
-app.get('/api/testAPI', async (req, res) => {
+app.put('/api/testAPI', async (req, res) => {
   try {
-    const response = await testAPI();
+    console.log('this is node',req.body)
+    const response = await testAPI(req.body);
     console.log(response, 'ti');
     res.status(200).send({
       result: response,
