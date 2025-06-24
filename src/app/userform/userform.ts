@@ -4,6 +4,7 @@ import {  MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AppService } from '../../app-service';
+import { Response } from './Modal';
 
 @Component({
   selector: 'app-userform',
@@ -36,9 +37,18 @@ export class Userform implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.UserData.value);
-    this.appService.testAPICall(this.UserData.value).subscribe((response) => {
-      console.log(response);
+    this.appService.testAPICall(this.UserData.value).subscribe((response:any) => {
+      this.downloadPDF(response.result.FileUrl, response.result.ResponseId)
+      console.log('this',response);
     });
+  }
+
+  downloadPDF(url:string,ResponseID:string){
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Resume${ResponseID}.pdf`; // Suggest a filename for the download
+    document.body.appendChild(a); // Append to body to make it clickable
+    a.click(); // Programmatically click the anchor to trigger download
+    a.remove(); // Remove the anchor after clicking
   }
 }

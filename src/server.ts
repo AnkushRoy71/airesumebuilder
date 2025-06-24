@@ -33,13 +33,14 @@ async function testAPI(UserData:UserData) {
   // make a generation request
   const { text } = await ai.generate(pdfGenerationPrompt(UserData));
   console.log(text);
-  api2pdf(text);
-  return text;
+  return api2pdf(text);
+  //return text;
 }
 
-function api2pdf(text : string){
-  a2pClient.wkHtmlToPdf(text).then(function (result:any) {
-    console.log(result);
+async function api2pdf(text : string){
+  return await a2pClient.wkHtmlToPdf(text, {
+    inline: false,
+    filename: 'test.pdf',
   });
 }
 
@@ -59,6 +60,7 @@ app.put('/api/testAPI', async (req, res) => {
     });
   }
 });
+
 
 /**
  * Example Express Rest API endpoints can be defined here.
