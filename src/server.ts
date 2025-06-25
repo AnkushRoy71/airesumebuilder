@@ -33,7 +33,8 @@ async function testAPI(UserData:UserData) {
   // make a generation request
   const { text } = await ai.generate(pdfGenerationPrompt(UserData));
   console.log(text);
-  return api2pdf(text);
+  const cleanedText = cleanHtmlFromMarkdownBlock(text)
+  return api2pdf(cleanedText);
   //return text;
 }
 
@@ -44,9 +45,30 @@ async function api2pdf(text : string){
   });
 }
 
+function cleanHtmlFromMarkdownBlock(markdownHtmlString: string): string {
+  // Check if the string starts with the markdown code block opening
+  if (markdownHtmlString.startsWith('```html')) {
+    // 1. Remove the first line (```html)
+    let cleanedString = markdownHtmlString.substring(
+      markdownHtmlString.indexOf('\n') + 1
+    );
+
+    // 2. Remove the last three characters (```) if they exist
+    if (cleanedString.endsWith('```')) {
+      cleanedString = cleanedString.slice(0, -3);
+    }
+
+    // 3. Optional: Remove any leading/trailing whitespace/newlines
+    cleanedString = cleanedString.trim();
+
+    return cleanedString;
+  }
+  // If it doesn't start with ```html, assume it's already clean or not a markdown block
+  return markdownHtmlString;
+}
+
 app.put('/api/testAPI', async (req, res) => {
   try {
-    console.log('this is node',req.body)
     const response = await testAPI(req.body);
     console.log(response, 'ti');
     res.status(200).send({

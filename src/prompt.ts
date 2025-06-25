@@ -22,7 +22,7 @@ export function pdfGenerationPrompt({
   Experience,
   Skills,
 }: UserData):string {
-  let prompt = `You need to return html wrapped in single quote for resume, according to the details provided by user.
+  let prompt = `You need to return html just html not wrapped in string for resume, according to the details provided by user.
     The full name of the user is ${FullName}, his/her role is ${Role}, user has also provided its contact number that is ${PhoneNumber},
     `;
   if (AlternateNumber) {
@@ -53,7 +53,8 @@ export function pdfGenerationPrompt({
     prompt += `User Skills are ${Skills}. Notice all of user skills are provided at one place to you so divide it using bullet points or Number categories skills if you can.`;
   }
 
-  prompt += `Try you best to provide a good layout and in 1 A4 size page. And remember you need to just return HTML wrraped in single quote`;
+  prompt += "Try you best to provide a good layout and change your layout every time and in 1 A4 size page. And remember you need to just return HTML , directly start from <!DOCTYPE html> nothing before that."
+  prompt += "Just give html not even any single word other than html not even.what is this don't provide this '(```html```)' ";
 
   return prompt;
 }
