@@ -67,21 +67,24 @@ function cleanHtmlFromMarkdownBlock(markdownHtmlString: string): string {
   return markdownHtmlString;
 }
 
-app.put('/api/testAPI', async (req, res) => {
-  try {
-    const response = await testAPI(req.body);
-    console.log(response, 'ti');
-    res.status(200).send({
-      result: response,
-      error: [],
-    });
-  } catch (error) {
-    res.status(400).send({
-      result: null,
-      error: [error],
-    });
+app.put(
+  'https://airesumebuilder-production-b352.up.railway.app/api/testAPI',
+  async (req, res) => {
+    try {
+      const response = await testAPI(req.body);
+      console.log(response, 'ti');
+      res.status(200).send({
+        result: response,
+        error: [],
+      });
+    } catch (error) {
+      res.status(400).send({
+        result: null,
+        error: [error],
+      });
+    }
   }
-});
+);
 
 
 /**

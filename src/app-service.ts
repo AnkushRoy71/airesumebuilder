@@ -8,7 +8,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AppService {
-  private apiUrl = 'http://localhost:4200/api/testAPI';
+  private apiUrl =
+    'https://airesumebuilder-production-b352.up.railway.app/api/testAPI';
   constructor(private httpClient: HttpClient) {}
 
   testAPICall(UserData: UserData): Observable<Response> {
