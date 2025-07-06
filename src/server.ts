@@ -8,6 +8,7 @@ import express from 'express';
 import { join } from 'node:path';
 import { googleAI } from '@genkit-ai/googleai';
 import { genkit } from 'genkit';
+import { pdfGenerationPrompt, UserData } from './prompt';
 require('dotenv').config();
 
 
@@ -28,25 +29,47 @@ const ai = genkit({
 });
 app.use(express.json());
 
-async function testAPI() {
+async function testAPI(UserData:UserData) {
   // make a generation request
-  const { text } = await ai.generate(
-    'create me a random resume html of a 3y experience software engineer having worked on 6 projects . headings will be of green color and content should adjust in one page and he has also recieved 2 award from previous company and just return html wrapped in single quote'
-  );
+  const { text } = await ai.generate(pdfGenerationPrompt(UserData));
   console.log(text);
-  api2pdf(text);
-  return text;
+  const cleanedText = cleanHtmlFromMarkdownBlock(text)
+  return api2pdf(cleanedText);
+  //return text;
 }
 
-function api2pdf(text : string){
-  a2pClient.wkHtmlToPdf(text).then(function (result:any) {
-    console.log(result);
+async function api2pdf(text : string){
+  return await a2pClient.wkHtmlToPdf(text, {
+    inline: false,
+    filename: 'test.pdf',
   });
 }
 
-app.get('/api/testAPI', async (req, res) => {
+function cleanHtmlFromMarkdownBlock(markdownHtmlString: string): string {
+  // Check if the string starts with the markdown code block opening
+  if (markdownHtmlString.startsWith('```html')) {
+    // 1. Remove the first line (```html)
+    let cleanedString = markdownHtmlString.substring(
+      markdownHtmlString.indexOf('\n') + 1
+    );
+
+    // 2. Remove the last three characters (```) if they exist
+    if (cleanedString.endsWith('```')) {
+      cleanedString = cleanedString.slice(0, -3);
+    }
+
+    // 3. Optional: Remove any leading/trailing whitespace/newlines
+    cleanedString = cleanedString.trim();
+
+    return cleanedString;
+  }
+  // If it doesn't start with ```html, assume it's already clean or not a markdown block
+  return markdownHtmlString;
+}
+
+app.put('/api/testAPI', async (req, res) => {
   try {
-    const response = await testAPI();
+    const response = await testAPI(req.body);
     console.log(response, 'ti');
     res.status(200).send({
       result: response,
@@ -59,6 +82,7 @@ app.get('/api/testAPI', async (req, res) => {
     });
   }
 });
+
 
 /**
  * Example Express Rest API endpoints can be defined here.
