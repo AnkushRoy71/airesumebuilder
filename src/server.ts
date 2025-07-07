@@ -127,7 +127,7 @@ if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
   app.listen(
     {
-      host: 'https://airesumebuilder-production-b352.up.railway.app',
+      host: 'airesumebuilder-production-b352.up.railway.app',
       port: port,
       exclusive: true,
     },
