@@ -67,24 +67,21 @@ function cleanHtmlFromMarkdownBlock(markdownHtmlString: string): string {
   return markdownHtmlString;
 }
 
-app.put(
-  'https://airesumebuilder-production-b352.up.railway.app/api/testAPI',
-  async (req, res) => {
-    try {
-      const response = await testAPI(req.body);
-      console.log(response, 'ti');
-      res.status(200).send({
-        result: response,
-        error: [],
-      });
-    } catch (error) {
-      res.status(400).send({
-        result: null,
-        error: [error],
-      });
-    }
+app.put('/api/testAPI', async (req, res) => {
+  try {
+    const response = await testAPI(req.body);
+    console.log(response, 'ti');
+    res.status(200).send({
+      result: response,
+      error: [],
+    });
+  } catch (error) {
+    res.status(400).send({
+      result: null,
+      error: [error],
+    });
   }
-);
+});
 
 
 /**
@@ -128,13 +125,20 @@ app.use((req, res, next) => {
  */
 if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
-  app.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
+  app.listen(
+    {
+      host: 'https://airesumebuilder-production-b352.up.railway.app',
+      port: port,
+      exclusive: true,
+    },
+    (error) => {
+      if (error) {
+        throw error;
+      }
 
-    console.log(`Node Express server listening on http://localhost:${port}`);
-  });
+      console.log(`Node Express server listening on http://localhost:${port}`);
+    }
+  );
 }
 
 /**
