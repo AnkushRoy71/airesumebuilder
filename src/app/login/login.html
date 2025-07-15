@@ -1,0 +1,2 @@
+<button *ngIf="!(auth.isAuthenticated$|async)" (click)="auth.loginWithRedirect()">Log in</button>
+<button *ngIf="auth.isAuthenticated$|async" (click)="auth.logout()">Log out</button>
