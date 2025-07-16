@@ -13,10 +13,11 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()),
     provideAuth0({
-      domain: '',
-      clientId: '',
+      domain: 'dev-x8hcbr1t80ivwfme.us.auth0.com',
+      clientId: 'SLJM8gWit4yoVr0pbIZ24zeHyrv80eDe',
       authorizationParams: {
-        redirect_uri: 'http://localhost:4200/resume',
+        redirect_uri:
+          'https://airesumebuilder-production-b352.up.railway.app/resume',
       },
     }),
   ],
