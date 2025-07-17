@@ -4,6 +4,7 @@ import {  MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AppService } from '../../app-service';
+import { MatButtonModule } from '@angular/material/button';
 import { Response } from './Modal';
 
 @Component({
@@ -12,6 +13,7 @@ import { Response } from './Modal';
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
+    MatButtonModule,
     ReactiveFormsModule,
   ],
   templateUrl: './userform.html',
@@ -21,6 +23,7 @@ import { Response } from './Modal';
 export class Userform implements OnInit {
   UserData!: FormGroup;
   appService = inject(AppService);
+  IsDisabled = false;
   ngOnInit(): void {
     this.UserData = new FormGroup({
       FullName: new FormControl(),
@@ -37,9 +40,11 @@ export class Userform implements OnInit {
   }
 
   onSubmit() {
+    this.IsDisabled = true;
     this.appService.testAPICall(this.UserData.value).subscribe((response:any) => {
-      this.downloadPDF(response.result.FileUrl, response.result.ResponseId)
-      console.log('this',response);
+      this.downloadPDF(response.result.FileUrl, response.result.ResponseId);
+      this.IsDisabled = false;
+      console.log('this', this.IsDisabled);
     });
   }
 
