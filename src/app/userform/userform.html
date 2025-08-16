@@ -1,4 +1,4 @@
-<div class="userform">
+<div class="userform" [class.popupClicked]="IsDisabled()">
   <div class="headCon">
     <h1 class="heading">Build Your Professional Profile</h1>
   </div>
@@ -34,7 +34,7 @@
             <mat-form-field class="w-100" appearance="outline">
               <mat-label class="label">Phone Number</mat-label>
               <input
-                type="number"
+                type="tel"
                 class="input"
                 matInput
                 formControlName="PhoneNumber"
@@ -46,7 +46,7 @@
             <mat-form-field class="w-100" appearance="outline">
               <mat-label class="label">Alternate Number</mat-label>
               <input
-                type="number"
+                type="tel"
                 class="input"
                 matInput
                 formControlName="AlternateNumber"
@@ -133,7 +133,7 @@
           <button
             mat-raised-button
             type="submit"
-            [disabled]="IsDisabled"
+            [disabled]="IsDisabled()"
             id="button"
           >
             Submit
@@ -143,3 +143,10 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+  <div *ngIf="IsDisabled()" class="popup">
+    <h4>Generating Your Profile...</h4>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+
+

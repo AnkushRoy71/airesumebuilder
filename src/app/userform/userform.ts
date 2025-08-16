@@ -1,11 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import {  MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AppService } from '../../app-service';
 import { MatButtonModule } from '@angular/material/button';
-import { Response } from './Modal';
+import { MatProgressBarModule } from '@angular/material/progress-bar'
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-userform',
@@ -14,6 +15,8 @@ import { Response } from './Modal';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    MatProgressBarModule,
+    CommonModule,
     ReactiveFormsModule,
   ],
   templateUrl: './userform.html',
@@ -23,7 +26,7 @@ import { Response } from './Modal';
 export class Userform implements OnInit {
   UserData!: FormGroup;
   appService = inject(AppService);
-  IsDisabled = false;
+  IsDisabled = signal(false);
   ngOnInit(): void {
     this.UserData = new FormGroup({
       FullName: new FormControl(),
@@ -40,10 +43,10 @@ export class Userform implements OnInit {
   }
 
   onSubmit() {
-    this.IsDisabled = true;
+    this.IsDisabled.set(true);
     this.appService.testAPICall(this.UserData.value).subscribe((response:any) => {
       this.downloadPDF(response.result.FileUrl, response.result.ResponseId);
-      this.IsDisabled = false;
+     this.IsDisabled.set(false);
       console.log('this', this.IsDisabled);
     });
   }

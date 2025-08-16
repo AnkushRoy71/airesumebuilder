@@ -39,10 +39,14 @@ async function testAPI(UserData:UserData) {
 }
 
 async function api2pdf(text : string){
-  return await a2pClient.wkHtmlToPdf(text, {
-    inline: false,
-    filename: 'test.pdf',
-  });
+  try {
+    return await a2pClient.wkHtmlToPdf(text, {
+      inline: false,
+      filename: `test${Math.random()}.pdf`,
+    });
+  } catch (err) {
+    console.error('here it fails', err);
+  }
 }
 
 function cleanHtmlFromMarkdownBlock(markdownHtmlString: string): string {

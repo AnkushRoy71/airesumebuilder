@@ -22,39 +22,49 @@ export function pdfGenerationPrompt({
   Experience,
   Skills,
 }: UserData):string {
-  let prompt = `You need to return html just html not wrapped in string for resume, according to the details provided by user.
-    The full name of the user is ${FullName}, his/her role is ${Role}, user has also provided its contact number that is ${PhoneNumber},
-    `;
-  if (AlternateNumber) {
-    prompt += `User has also provided its Alternate Contact Number that is ${AlternateNumber}.`;
-  }
 
-  if (City) {
-    prompt += `The City where user currently resides is ${City}.`;
-  }
+const prompt = `
+Generate a single, complete HTML document for a professional resume.
+The output must start directly with '<!DOCTYPE html>' and end with '</html>'. Do not include any text, comments, or code block delimiters (\`\`\`html\`) outside of the HTML document.
+The resume should be visually distinct, fit on a single A4-size page, and change its layout and design on each generation.
 
-  if (State) {
-    prompt += `The State where user currently resides is ${State}.`;
-  }
+Use the following information to populate the resume, only including a section if its data is provided:
 
-  if (Country) {
-    prompt += `The Country where user currently resides is ${Country}.`;
-  }
+${FullName ? `Full Name: ${FullName}` : ''}
+${Role ? `Role: ${Role}` : ''}
+${PhoneNumber ? `Primary Phone: ${PhoneNumber}` : ''}
+${AlternateNumber ? `Alternate Phone: ${AlternateNumber}` : ''}
+${
+  City || State || Country
+    ? `Location: ${[City, State, Country].filter(Boolean).join(', ')}`
+    : ''
+}
 
-  if (Education) {
-    prompt += `User educations are ${Education}. Notice all of user education are provided at one place to you so divide it using bullet points or different headings as suitable to you.`;
-  }
-
-  if (Experience) {
-    prompt += `User Experience are ${Experience}. Notice all of user experience , projects are provided at one place to you so divide it using bullet points or different headings or subheadings as suitable to you.`;
-  }
-
-  if (Skills) {
-    prompt += `User Skills are ${Skills}. Notice all of user skills are provided at one place to you so divide it using bullet points or Number categories skills if you can.`;
-  }
-
-  prompt += "Try you best to provide a good layout and change your layout every time and in 1 A4 size page. And remember you need to just return HTML , directly start from <!DOCTYPE html> nothing before that."
-  prompt += "Just give html not even any single word other than html not even.what is this don't provide this '(```html```)' ";
+${
+  Education
+    ? `
+Education: ${Education}
+(Format this section with suitable headings and bullet points.)
+`
+    : ''
+}
+${
+  Experience
+    ? `
+Experience: ${Experience}
+(Format this section with suitable headings and bullet points for each job or project.)
+`
+    : ''
+}
+${
+  Skills
+    ? `
+Skills: ${Skills}
+(Categorize the skills and present them clearly, using bullet points or a similar list format.)
+`
+    : ''
+}
+`;
 
   return prompt;
 }
